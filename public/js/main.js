@@ -13,7 +13,24 @@ function openForm() {
 //   if(queryString === "bought"){
 // 	document.getElementsByClassName("info-profile")[0].style.display = "none";
 // }
-
+function changeImg(input) {
+    //Nếu như tồn thuộc tính file, đồng nghĩa người dùng đã chọn file mới
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        //Sự kiện file đã được load vào website
+        reader.onload = function (e) {
+            //Thay đổi đường dẫn ảnh
+            $(input).siblings('.thumbnail').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+//Khi click #thumbnail thì cũng gọi sự kiện click #image
+$(document).ready(function () {
+    $('.thumbnail').click(function () {
+        $(this).siblings('.image').click();
+    });
+});
 
 (function($) {
 	"use strict"
@@ -183,3 +200,22 @@ function openForm() {
 	}
 
 })(jQuery);
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Lấy tất cả các danh mục
+    var categories = document.querySelectorAll('.section-tab-nav .tab-nav li a');
+
+    // Lặp qua từng danh mục
+    categories.forEach(function(category) {
+        // Thêm sự kiện click cho từng danh mục
+        category.addEventListener('click', function(event) {
+            // Ngăn chặn hành vi mặc định khi click vào một liên kết
+            event.preventDefault();
+
+            // Lấy id của danh mục
+            var categoryId = this.getAttribute('data-category-id');
+
+        });
+    });
+});
+

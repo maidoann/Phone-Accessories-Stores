@@ -32,7 +32,11 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         $previousUrl = $request->input('previous');
-    
+
+        if ($user->isAdmin()) {
+            return redirect()->route('admin');
+        }
+        
         // Nếu tồn tại URL của trang trước đó, chuyển hướng đến đó
         if ($previousUrl) {
             return redirect()->intended($previousUrl);

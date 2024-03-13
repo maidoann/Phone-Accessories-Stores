@@ -72,7 +72,6 @@ class AjaxController extends Controller
                         ->get();
             } else {
                 if ($array_cate_id[0] != "" && $array_brand_id[0] != "") {
-                    echo "cả 2 có";
                     $numberOfRecord = Product::whereIn('product_category_id', $array_cate_id)
                         ->WhereIn('brand_id', $array_brand_id)
                         ->whereHas('productDetail', function ($query) use ($min, $max) {
@@ -260,7 +259,7 @@ class AjaxController extends Controller
             $output .= '<div class="col-md-4 col-xs-6">
         <div class="product">
             <div class="product-img">
-                <img src="' . $item->productImage->first()->path . '" alt="">
+                <img src="products_img/' . $item->productImage->first()->path . '" alt="">
                 <div class="product-label">
                     <span class="sale">-30%</span>
                     <span class="new">NEW</span>
@@ -298,7 +297,14 @@ class AjaxController extends Controller
         </div>
     </div>
     <div class="add-to-cart">
-        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Thêm Giỏ Hàng</button>
+    <form action="'. route('carts.store') .'" method="POST" class="add-to-cart-form">
+    '. csrf_field() .'
+        <input type="hidden" name="product_id" value="'. $item->id .'">
+        <input type="hidden" name="price" value="'. $formattedPrice .'">
+        <input type="hidden" name="quantity" value="1"> <!-- Số lượng mặc định -->
+        
+        <button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+    </form>
     </div>
 </div>
 </div>';
@@ -381,7 +387,7 @@ class AjaxController extends Controller
             $output .= '<div class="col-md-4 col-xs-6">
         <div class="product">
             <div class="product-img">
-                <img src="' . $item->productImage->first()->path . '" alt="">
+                <img src="products_img/' . $item->productImage->first()->path . '" alt="">
                 <div class="product-label">
                     <span class="sale">-30%</span>
                     <span class="new">NEW</span>
@@ -421,7 +427,14 @@ class AjaxController extends Controller
         </div>
     </div>
     <div class="add-to-cart">
-        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Thêm Giỏ Hàng</button>
+    <form action="'. route('carts.store') .'" method="POST" class="add-to-cart-form">
+    '. csrf_field() .'
+        <input type="hidden" name="product_id" value="'. $item->id .'">
+        <input type="hidden" name="price" value="'. $formattedPrice .'">
+        <input type="hidden" name="quantity" value="1"> <!-- Số lượng mặc định -->
+        
+        <button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+    </form>
     </div>
 </div>
 </div>';
@@ -505,7 +518,7 @@ class AjaxController extends Controller
             $output .= '<div class="col-md-4 col-xs-6">
         <div class="product">
             <div class="product-img">
-                <img src="' . $item->productImage->first()->path . '" alt="">
+                <img src="products_img/' . $item->productImage->first()->path . '" alt="">
                 <div class="product-label">
                     <span class="sale">-30%</span>
                     <span class="new">NEW</span>
@@ -542,8 +555,15 @@ class AjaxController extends Controller
         </div>
     </div>
     <div class="add-to-cart">
-        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Thêm Giỏ Hàng</button>
-    </div>
+    <form action="'. route('carts.store') .'" method="POST" class="add-to-cart-form">
+    '. csrf_field() .'
+        <input type="hidden" name="product_id" value="'. $item->id .'">
+        <input type="hidden" name="price" value="'. $formattedPrice .'">
+        <input type="hidden" name="quantity" value="1"> <!-- Số lượng mặc định -->
+        
+        <button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+    </form>
+</div>
 </div>
 </div>';
         }

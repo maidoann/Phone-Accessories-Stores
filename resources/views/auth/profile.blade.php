@@ -1,6 +1,37 @@
 @extends('layouts.app')
 @section('title', Auth::user()->name)
 @section('main')
+        <!-- Hiển thị thông báo -->
+        @if(session('success'))
+            <div id="alertSuccess" class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div id="alertError" class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                setTimeout(function() {
+                    var alertSuccess = document.getElementById('alertSuccess');
+                    var alertError = document.getElementById('alertError');
+                    
+                    // Ẩn thông báo thành công sau 2 giây
+                    if (alertSuccess) {
+                        alertSuccess.style.display = 'none';
+                    }
+
+                    // Ẩn thông báo lỗi sau 5 giây
+                    if (alertError) {
+                        alertError.style.display = 'none';
+                    }
+                }, 2000); // 2 giây
+            });
+        </script>
 			<div class="row gutters-sm">
 				<div class="col-md-2 profile-list">
 					<ul class="list-link">
@@ -80,7 +111,7 @@
 				
 				<!-- The form -->
 				<div class="form-popup col-md-8" id="editProfileForm">
-					<form action="{{ route('user.update-profile', ['user'=>Auth::user()->id]) }}" method="POST" class="form-container d-grid gap-2" enctype="multipart/form-data">
+					<form action="{{ route('update-profile', ['user'=>Auth::user()->id]) }}" method="POST" class="form-container d-grid gap-2" enctype="multipart/form-data">
 						@csrf
 						@method('PUT')
 						<div class="row">

@@ -26,7 +26,6 @@ class User extends Authenticatable
         'level',
         'phone',
         'address',
-
     ];
 
     /**
@@ -48,4 +47,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function isAdmin()
+    {
+        return $this->level === 0;
+    }
 }

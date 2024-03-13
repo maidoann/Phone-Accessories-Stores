@@ -38,6 +38,38 @@
             </div>
         </div>
     </div>
+    <div>
+        @if(session('success'))
+            <div id="alertSuccess" class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div id="alertError" class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <script>
+            // Ensure the entire page has loaded before executing JavaScript code
+            document.addEventListener("DOMContentLoaded", function() {
+                // Use JavaScript to hide the alerts after a certain period of time
+                setTimeout(function() {
+                    var alertSuccess = document.getElementById('alertSuccess');
+                    if (alertSuccess) {
+                        alertSuccess.style.display = 'none';
+                    }
+
+                    var alertError = document.getElementById('alertError');
+                    if (alertError) {
+                        alertError.style.display = 'none';
+                    }
+                }, 3000); // 2 seconds
+            });
+        </script>
+    </div>
+
     <!-- /BREADCRUMB -->
     <!-- SECTION -->
 		<div class="section">
@@ -47,10 +79,11 @@
 				<div class="row">
                     <!-- Product main img -->
                     <div class="col-md-5 col-md-push-2">
+
                         <div id="product-main-img">
                             @foreach ($product->productImage as $image)
                                 <div class="product-preview">
-                                    <img src="{{ $image->path }}" alt="{{ $product->name }}">
+                                    <img src="{{ asset('products_img/' . $image->path) }}" alt="{{ $product->name }}">
                                 </div>
                             @endforeach
                         </div>
@@ -61,7 +94,7 @@
                         <div id="product-imgs">
                             @foreach ($product->productImage as $image)
                                 <div class="product-preview">
-                                    <img src="{{ $image->path }}" alt="{{ $product->name }}">
+                                    <img src="{{ asset('products_img/' . $image->path) }}" alt="{{ $product->name }}">
                                 </div>
                             @endforeach
                         </div>
@@ -126,26 +159,36 @@
                                 </div>
                                 <!-- Số lượng sản phẩm và nút thêm vào giỏ hàng -->
                                 <div class="add-to-cart">
-                                    <div class="qty-label">
-                                        Số lượng
-                                        <div class="input-number">
-                                            <input id="quantityInput" type="number" value="1" min="1" max="{{$product->quantity}}" onchange="if(parseInt(this.value) < parseInt(this.min)) this.value = this.min; if(parseInt(this.value) > parseInt(this.max)) this.value = this.max;">
-                                            <span class="qty-up">+</span>
-                                            <span class="qty-down">-</span>
-                                        </div>
-                                    </div>
-                                    @if ($product->quantity > 0)
-                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
-                                    @else
-                                        <button class="add-to-cart-btn" disabled><i class="fa fa-shopping-cart"></i>Hết hàng</button>
-                                    @endif
-                                </div>
+                                    <form action="{{ route('carts.store') }}" method="POST" class="add-to-cart-form">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="price" value="{{ $formattedPrice }}">
 
+                                        <div class="qty-label">
+                                            Số lượng
+                                            <div class="input-number">
+                                                <input id="quantityInput" type="number" name="quantity" value="1" min="1" max="{{ $product->quantity }}" onchange="if(parseInt(this.value) < parseInt(this.min)) this.value = this.min; if(parseInt(this.value) > parseInt(this.max)) this.value = this.max;">
+                                                <span class="qty-up">+</span>
+                                                <span class="qty-down">-</span>
+                                            </div>
+                                        </div>
+                                        @if ($product->quantity > 0)
+                                            <button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+                                        @else
+                                            <button type="button" class="add-to-cart-btn" disabled><i class="fa fa-shopping-cart"></i>Hết hàng</button>
+                                        @endif
+                                    </form>
+                                </div>
                                 <!-- Thêm vào yêu thích và so sánh sản phẩm -->
-                                <ul class="product-btns">
-                                    <li><a href="#"><i class="fa fa-heart-o"></i>Thêm vào yêu thích</a></li>
-                                    <!-- <li><a href="#"><i class="fa fa-exchange"></i>So sánh</a></li> -->
-                                </ul>
+                                <form action="{{ route('favorites.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit" class="btn btn-link p-0" style="background-color: transparent; border: none; text-decoration: none; color: black;">
+                                        <i class="fa fa-heart-o"></i> Thêm vào yêu thích
+                                    </button>
+                                </form>
+
+
 
                                 <!-- Danh mục của sản phẩm  -->
                                 <ul class="product-links">
@@ -340,7 +383,6 @@
                                                     <p>Bạn cần <a href="{{ route('login', ['previous' => url()->current()]) }} "> đăng nhập</a> để bình luận.</p>
                                                 </div>
                                             @endif
-
                                         @endif
                                         <!-- /Review Form -->
                                     </div>
@@ -378,7 +420,7 @@
                                     <div class="product-img">
                                         <!-- Lấy hình ảnh đầu tiên của sản phẩm -->
                                         @if($pr->productImage->count() > 0)
-                                            <img src="{{ $pr->productImage->first()->path }}" alt="{{ $pr->name }}">
+                                            <img src="{{ asset('products_img/' . $pr->productImage->first()->path) }}" alt="{{ $pr->name }}">
                                         @else
                                             <img src="placeholder.jpg" alt="{{ $pr->name }}">
                                         @endif
@@ -409,8 +451,22 @@
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
-                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</button>
-                                    </div>
+                                    <form action="{{ route('carts.store') }}" method="POST" class="add-to-cart-form">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="price" value="{{ $formattedPrice }}">
+
+                                            <div class="input-number">
+                                                <input type="hidden" id="quantityInput" type="number" name="quantity" value="1" >
+                                            </div>
+                                        @if ($product->quantity > 0)
+                                            <button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+                                        @else
+                                            <button type="button" class="add-to-cart-btn" disabled><i class="fa fa-shopping-cart"></i>Hết hàng</button>
+                                        @endif
+                                    </form>
+                                </div>
+
                                 </div>
                             </div>
                         @endforeach
@@ -419,7 +475,5 @@
             </div>
         </div>
         <!-- /Related Products -->
-
-
 
 @endsection

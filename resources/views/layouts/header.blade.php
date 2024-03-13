@@ -24,10 +24,10 @@
 									</a>
 									<div class="btn profile-dropdown">
 										<ul class="profile-list">
-											<li class="dropdown-item"><a href="{{route('user.profile', ['user'=>Auth::user()->id])}}">Thông tin cá nhân</a></li><hr>
+											<li class="dropdown-item"><a href="{{route('profile', ['user'=>Auth::user()->id])}}">Thông tin cá nhân</a></li><hr>
 											<li class="dropdown-item"><a href="#">DS Yêu thích</a></li><hr>
 											<li class="dropdown-item"><a href="#">Giỏ hàng</a></li><hr>
-											<li class="dropdown-item"><a href="#">Cài đặt</a></li>
+											<li class="dropdown-item"><a href="#">Cài đặt</a></li><hr>
 											<hr style="margin-bottom: 0%;">
 											<li>
 												<a class="dropdown-item" href="{{ route('logout') }}"
@@ -82,7 +82,7 @@
 							<div class="header-ctn">
 								<!-- Wishlist -->
 								<div>
-									<a href="#">
+									<a href="{{ route('favorites.index') }}">
 										<i class="fa fa-heart"></i>
 										<span>DS yêu thích</span>
 										<!-- <div class="qty">2</div> -->
@@ -92,10 +92,9 @@
 
 								<!-- Cart -->
 								<div>
-									<a href="#">
+									<a href="{{route('carts.index')}}">
 										<i class="fa fa-shopping-cart"></i>
 										<span>Giỏ hàng</span>
-										<!-- <div class="qty">2</div> -->
 									</a>
 								</div>
 								<!-- /Cart -->

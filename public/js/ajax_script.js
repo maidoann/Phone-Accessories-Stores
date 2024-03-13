@@ -184,6 +184,8 @@ function getProduct() {
         data: data,
         success: function (data) {
             $('#storess').html(data);
+            addCart();
+
         },
         error: function (err) {
             console.log(err);
@@ -208,6 +210,8 @@ function start(){
             data: data,
             success: function (data) {
                 $('#storess').html(data);
+                addCart();
+
             },
             error: function (err) {
                 console.log(err);
@@ -225,6 +229,8 @@ function start(){
             data: data,
             success: function (data) {
                 $('#storess').html(data);
+                addCart();
+
             },
             error: function (err) {
                 console.log(err);
@@ -248,6 +254,8 @@ function phantrang(){
         data: data,
         success: function (data) {
             $('#storess').html(data);
+            addCart();
+
         },
         error: function (err) {
             console.log(err);
@@ -255,4 +263,127 @@ function phantrang(){
     });
 }
 
+$(document).ready(function() {
+    addCart();
+});
 
+$(document).ready(function() {
+    $('.sanphammoi a').on('click', function(e) {
+        e.preventDefault();
+
+        // Lấy giá trị từ thuộc tính data-sp của thẻ a
+        var category = $(this).data('sp');
+        let data = {category: category};
+        console.log(category);
+
+        // Gửi yêu cầu Ajax với giá trị category
+        $.ajax({
+            url: 'homeAjaxProductMoi',  // Thay đổi đường dẫn nếu cần
+            type: 'GET',
+            data: data,
+            success: function(data) {
+                // Xử lý dữ liệu nhận được từ server
+                $('#mot').html(data);
+                addCart();
+                initSlickSlider('.products-slick');
+                
+
+                // Hiển thị sản phẩm mới tại đây
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+    });
+
+});
+$(document).ready(function() {
+    $('.sanphambanchay a').on('click', function(e) {
+        e.preventDefault();
+
+        // Lấy giá trị từ thuộc tính data-sp của thẻ a
+        var category = $(this).data('sp');
+        let data = {category: category};
+        console.log(category);
+
+        // Gửi yêu cầu Ajax với giá trị category
+        $.ajax({
+            url: 'homeAjaxProductBanChay',  // Thay đổi đường dẫn nếu cần
+            type: 'GET',
+            data: data,
+            success: function(data) {
+                // Xử lý dữ liệu nhận được từ server
+                $('#mot').html(data.outputdf);
+                $('#hai').html(data.output);
+                initSlickSlider('.products-slick');
+                addCart();
+
+
+
+                // Hiển thị sản phẩm mới tại đây
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+    function initSlickSlider(target) {
+        console.log("Init Slick Slider");
+        $(target).slick({
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            dots: false,
+            arrows: false, // Ẩn nút prev và next
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1
+                    }
+                },
+                // Thêm các đối tượng responsive khác nếu cần
+            ]
+        });
+}
+
+function addCart(){
+    $('.add-to-cart-form').off('submit').on('submit', function(e) {
+        e.preventDefault(); // Ngăn chặn việc gửi form một cách thông thường
+        var formData = $(this).serialize(); // Lấy dữ liệu từ form
+        console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: formData,
+            success: function (response) {
+                // Hiển thị toast thành công bằng SweetAlert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sản phẩm đã đươc thêm vào giỏ hàng',
+                    text: response.message,
+                    toast: true,
+                    position: 'top-end', // Hiển thị ở góc trên cùng bên phải
+                    timer: 2000, // Thời gian tự động đóng (miliseconds)
+                    showConfirmButton: false, // Ẩn nút xác nhận
+                });
+            },
+            error: function (xhr, status, error) {
+                // Hiển thị toast lỗi bằng SweetAlert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: xhr.responseJSON.message,
+                    toast: true,
+                    position: 'top-end', // Hiển thị ở góc trên cùng bên phải
+                    timer: 2000, // Thời gian tự động đóng (miliseconds)
+                    showConfirmButton: false, // Ẩn nút xác nhận
+                });
+            }
+        });
+    });
+}

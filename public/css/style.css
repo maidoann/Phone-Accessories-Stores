@@ -1957,6 +1957,10 @@ textarea.input {
   margin-top: 30px;
 }
 
+.wide-btn {
+  width: 100%;
+}
+
 /*=========================================================
 	10 -> NEWSLETTER
 ===========================================================*/
@@ -2233,4 +2237,25 @@ textarea.input {
     float: none;
     margin-top: 10px;
   }
+}
+/*=========================================================
+	ORDER SUCCESS
+===========================================================*/
+
+
+
+.custom-button-color {
+  background-color: rgb(88, 174, 179); /* Đổi màu nền thành đen */
+  color: white; /* Đổi màu chữ thành trắng */
+  border-width: 2px; 
+  border-radius: 20px;
+  font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+
+
+}
+.required {
+  color: red;
 }

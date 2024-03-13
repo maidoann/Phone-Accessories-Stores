@@ -4,11 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+
 
 class Product extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
+    protected $fillable = ['name', 'product_category_id', 'brand_id', 'description', 'details', 'quantity', 'product_images'];
+
+
 
     # 
     public function productImage(){
@@ -47,6 +53,4 @@ class Product extends Model
     {
         return $this->hasManyThrough(Order::class, OrderDetail::class, 'product_id', 'id', 'id', 'order_id');
     }
-
-
 }
